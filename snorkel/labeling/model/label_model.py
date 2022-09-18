@@ -21,6 +21,7 @@ from snorkel.utils.lr_schedulers import LRSchedulerConfig
 from snorkel.utils.optimizers import OptimizerConfig
 
 Metrics = Dict[str, float]
+logger = logging.getLogger(__name__)
 
 
 class TrainConfig(Config):
@@ -623,9 +624,10 @@ class LabelModel(nn.Module, BaseLabeler):
         return metrics_dict
 
     def _set_logger(self) -> None:
-        self.logger = Logger(self.train_config.log_freq)
-        if self.config.verbose:
-            logging.basicConfig(level=logging.INFO)
+        self.logger_helper = Logger(
+            log_freq=self.train_config.log_freq,
+            name=f'{logger.name}.{self.__class__.__name__}'
+        )
 
     def _set_optimizer(self) -> None:
         parameters = filter(lambda p: p.requires_grad, self.parameters())
@@ -712,7 +714,7 @@ class LabelModel(nn.Module, BaseLabeler):
                 self.optimizer, linear_warmup_func
             )
             if self.config.verbose:  # pragma: no cover
-                logging.info(f"Warmup {self.warmup_steps} steps.")
+                self.logger_helper.logger.info(f"Warmup {self.warmup_steps} steps.")
 
         elif self.train_config.lr_scheduler_config.warmup_percentage:
             warmup_percentage = self.train_config.lr_scheduler_config.warmup_percentage
@@ -722,7 +724,7 @@ class LabelModel(nn.Module, BaseLabeler):
                 self.optimizer, linear_warmup_func
             )
             if self.config.verbose:  # pragma: no cover
-                logging.info(f"Warmup {self.warmup_steps} steps.")
+                self.logger_helper.logger.info(f"Warmup {self.warmup_steps} steps.")
 
         else:
             warmup_scheduler = None
@@ -902,13 +904,13 @@ class LabelModel(nn.Module, BaseLabeler):
 
         # Compute O and initialize params
         if self.config.verbose:  # pragma: no cover
-            logging.info("Computing O...")
+            self.logger_helper.logger.info("Computing O...")
         self._generate_O(L_shift)
         self._init_params()
 
         # Estimate \mu
         if self.config.verbose:  # pragma: no cover
-            logging.info(r"Estimating \mu...")
+            self.logger_helper.logger.info(r"Estimating \mu...")
 
         # Set model to train mode
         self.train()
@@ -916,7 +918,7 @@ class LabelModel(nn.Module, BaseLabeler):
         # Move model to GPU
         self.mu_init = self.mu_init.to(self.config.device)
         if self.config.verbose and self.config.device != "cpu":  # pragma: no cover
-            logging.info("Using GPU...")
+            self.logger_helper.logger.info("Using GPU...")
         self.to(self.config.device)
 
         # Set training components
@@ -974,4 +976,4 @@ class LabelModel(nn.Module, BaseLabeler):
 
         # Print confusion matrix if applicable
         if self.config.verbose:  # pragma: no cover
-            logging.info("Finished Training")
+            self.logger_helper.logger.info("Finished Training")
