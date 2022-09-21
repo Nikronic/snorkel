@@ -612,9 +612,9 @@ class LabelModel(nn.Module, BaseLabeler):
         # Always add average loss
         metrics_dict = {"train/loss": self.running_loss / self.running_examples}
 
-        if self.logger.check():
+        if self.logger_helper.check():
             if self.config.verbose:
-                self.logger.log(metrics_dict)
+                self.logger_helper.log(metrics_dict)
 
             # Reset running loss and examples counts
             self.running_loss = 0.0
