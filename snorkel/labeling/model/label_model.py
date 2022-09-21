@@ -625,8 +625,7 @@ class LabelModel(nn.Module, BaseLabeler):
 
     def _set_logger(self) -> None:
         self.logger_helper = Logger(
-            log_freq=self.train_config.log_freq,
-            name=f'{logger.name}.{self.__class__.__name__}'
+            log_freq=self.train_config.log_freq, name=f"{logger.name}"
         )
 
     def _set_optimizer(self) -> None:
