@@ -32,6 +32,7 @@ from .schedulers import batch_schedulers
 Metrics = Dict[str, float]
 logger = logging.getLogger(__name__)
 
+
 class TrainerConfig(Config):
     """Settings for the Trainer.
 

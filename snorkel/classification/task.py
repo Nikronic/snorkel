@@ -13,6 +13,7 @@ Outputs = Mapping[str, List[torch.FloatTensor]]
 
 logger = logging.getLogger(__name__)
 
+
 class Operation:
     """A single operation (forward pass of a module) to execute in a Task.
 

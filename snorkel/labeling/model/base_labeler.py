@@ -8,7 +8,6 @@ import numpy as np
 from snorkel.analysis import Scorer
 from snorkel.utils import probs_to_preds
 
-
 logger = logging.getLogger(__name__)
 
 

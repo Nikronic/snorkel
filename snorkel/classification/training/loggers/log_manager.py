@@ -7,7 +7,6 @@ from snorkel.types import Config
 from .checkpointer import Checkpointer
 from .log_writer import LogWriter
 
-
 logger = logging.getLogger(__name__)
 
 

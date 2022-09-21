@@ -7,7 +7,6 @@ from typing import Any, DefaultDict, List, Mapping, Optional
 
 from snorkel.types import Config
 
-
 logger = logging.getLogger(__name__)
 
 
