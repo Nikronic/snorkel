@@ -19,7 +19,7 @@ class Logger:
         Running total of number of units passed without logging
     """
 
-    def __init__(self, log_freq: int, name: str) -> None:
+    def __init__(self, log_freq: int, name: Optional[str] = None) -> None:
         self.log_freq = log_freq
         self.unit_count = -1
         self.logger = logging.getLogger(name)
